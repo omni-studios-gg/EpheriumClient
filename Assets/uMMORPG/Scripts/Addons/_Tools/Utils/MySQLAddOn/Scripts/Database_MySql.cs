@@ -117,13 +117,15 @@ namespace uMMORPG
                     // accounts
                     @"
                 CREATE TABLE IF NOT EXISTS `accounts` (
-                  `name` varchar(32) NOT NULL,
-                  `password` varchar(254) NOT NULL,
-                  `created` datetime NOT NULL,
-                  `lastlogin` datetime NOT NULL,
-                  `online` tinyint(1) NOT NULL DEFAULT 0,
-                  `banned` tinyint(1) NOT NULL DEFAULT 0,
-                  PRIMARY KEY (`name`)
+                      `id` int(11) NOT NULL AUTO_INCREMENT,
+                      `name` varchar(32) NOT NULL,
+                      `password` varchar(254) NOT NULL,
+                      `created` datetime NOT NULL,
+                      `lastlogin` datetime NOT NULL,
+                      `online` tinyint(1) NOT NULL DEFAULT 0,
+                      `banned` tinyint(1) NOT NULL DEFAULT 0,
+                      PRIMARY KEY (`id`),
+                      KEY `name` (`name`) USING BTREE
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
                 " +
 
@@ -132,15 +134,15 @@ namespace uMMORPG
                 CREATE TABLE IF NOT EXISTS `characters` (
                   `id` int(11) NOT NULL AUTO_INCREMENT,
                   `name` varchar(32) NOT NULL,
-                  `account` varchar(32) NOT NULL,
+                  `account_id` int(11) NOT NULL,
                   `class` varchar(32) NOT NULL,
                   `x` float NOT NULL,
                   `y` float NOT NULL, " +
 #if !_iMMO2D
-                      @"
-                  `z` float NOT NULL," +
+                                      @"
+                                  `z` float NOT NULL," +
 #endif
-                      @"
+                                      @"
                   `level` int(11) NOT NULL DEFAULT 1,
                   `health` int(11) NOT NULL,
                   `mana` int(11) NOT NULL,
@@ -157,10 +159,10 @@ namespace uMMORPG
                   `deleted` tinyint(1) NOT NULL,
                   PRIMARY KEY (`id`),
                   UNIQUE KEY `name` (`name`) USING BTREE,
-                  KEY `account` (`account`),
-                  CONSTRAINT FOREIGN KEY (`account`) REFERENCES `accounts` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
+                  KEY `account` (`account_id`),
+                  CONSTRAINT FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-                " +
+                                " +
 
                     // character_buffs
                     @"
